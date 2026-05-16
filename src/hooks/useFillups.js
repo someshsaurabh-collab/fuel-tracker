@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-
-const FILLUPS_KEY = 'petrol_fillups';
-const REDEMPTIONS_KEY = 'petrol_redemptions';
-const SETTINGS_KEY = 'petrol_settings';
+import {
+  collection, doc, onSnapshot, setDoc, deleteDoc, writeBatch
+} from 'firebase/firestore';
+import { db } from '../firebase';
 
 const DEFAULT_SETTINGS = {
   startingPoints: 0,
@@ -11,70 +11,69 @@ const DEFAULT_SETTINGS = {
   carName: 'Mahindra XUV 3XO AX5',
 };
 
-export function useFillups() {
-  const [fillups, setFillups] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(FILLUPS_KEY)) || []; }
-    catch { return []; }
-  });
+export function useFillups(uid) {
+  const [fillups, setFillups] = useState([]);
+  const [redemptions, setRedemptions] = useState([]);
+  const [settings, setSettingsState] = useState(DEFAULT_SETTINGS);
+  const [loading, setLoading] = useState(true);
 
-  const [redemptions, setRedemptions] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(REDEMPTIONS_KEY)) || []; }
-    catch { return []; }
-  });
-
-  const [settings, setSettings] = useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
-      return saved ? { ...DEFAULT_SETTINGS, ...saved } : DEFAULT_SETTINGS;
-    } catch { return DEFAULT_SETTINGS; }
-  });
+  const fillupsRef = () => collection(db, 'users', uid, 'fillups');
+  const redemptionsRef = () => collection(db, 'users', uid, 'redemptions');
+  const settingsDocRef = () => doc(db, 'users', uid, 'meta', 'settings');
 
   useEffect(() => {
-    localStorage.setItem(FILLUPS_KEY, JSON.stringify(fillups));
-  }, [fillups]);
+    if (!uid) return;
+    let settled = 0;
+    const done = () => { settled++; if (settled === 3) setLoading(false); };
 
-  useEffect(() => {
-    localStorage.setItem(REDEMPTIONS_KEY, JSON.stringify(redemptions));
-  }, [redemptions]);
+    const unsubFillups = onSnapshot(fillupsRef(), snap => {
+      setFillups(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      done();
+    });
 
-  useEffect(() => {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  }, [settings]);
+    const unsubRedemptions = onSnapshot(redemptionsRef(), snap => {
+      setRedemptions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      done();
+    });
 
-  const addFillup = (entry) => {
-    setFillups(prev => [...prev, entry]);
-  };
+    const unsubSettings = onSnapshot(settingsDocRef(), snap => {
+      if (snap.exists()) setSettingsState({ ...DEFAULT_SETTINGS, ...snap.data() });
+      done();
+    });
 
-  const updateFillup = (id, updated) => {
-    setFillups(prev => prev.map(f => f.id === id ? { ...f, ...updated } : f));
-  };
+    return () => { unsubFillups(); unsubRedemptions(); unsubSettings(); };
+  }, [uid]);
 
-  const deleteFillup = (id) => {
-    setFillups(prev => prev.filter(f => f.id !== id));
-  };
+  const addFillup = (entry) =>
+    setDoc(doc(db, 'users', uid, 'fillups', entry.id), entry);
 
-  const addRedemption = (entry) => {
-    setRedemptions(prev => [...prev, entry]);
-  };
+  const updateFillup = (id, updated) =>
+    setDoc(doc(db, 'users', uid, 'fillups', id), updated);
 
-  const deleteRedemption = (id) => {
-    setRedemptions(prev => prev.filter(r => r.id !== id));
-  };
+  const deleteFillup = (id) =>
+    deleteDoc(doc(db, 'users', uid, 'fillups', id));
 
-  const importFillups = (entries) => {
-    setFillups(entries);
+  const addRedemption = (entry) =>
+    setDoc(doc(db, 'users', uid, 'redemptions', entry.id), entry);
+
+  const deleteRedemption = (id) =>
+    deleteDoc(doc(db, 'users', uid, 'redemptions', id));
+
+  const setSettings = (newSettings) =>
+    setDoc(settingsDocRef(), newSettings);
+
+  const importFillups = async (entries) => {
+    const batch = writeBatch(db);
+    // Delete existing
+    fillups.forEach(f => batch.delete(doc(db, 'users', uid, 'fillups', f.id)));
+    // Add new
+    entries.forEach(e => batch.set(doc(db, 'users', uid, 'fillups', e.id), e));
+    await batch.commit();
   };
 
   return {
-    fillups,
-    redemptions,
-    settings,
-    setSettings,
-    addFillup,
-    updateFillup,
-    deleteFillup,
-    addRedemption,
-    deleteRedemption,
-    importFillups,
+    fillups, redemptions, settings, loading,
+    setSettings, addFillup, updateFillup, deleteFillup,
+    addRedemption, deleteRedemption, importFillups,
   };
 }

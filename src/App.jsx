@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useFillups } from './hooks/useFillups';
+import { useAuth } from './contexts/AuthContext';
 import Dashboard from './components/Dashboard';
 import AddFillupForm from './components/AddFillupForm';
 import LogsTable from './components/LogsTable';
@@ -7,6 +8,7 @@ import Analytics from './components/Analytics';
 import PointsTracker from './components/PointsTracker';
 import ImportExport from './components/ImportExport';
 import Settings from './components/Settings';
+import Login from './components/Login';
 import './index.css';
 
 const NAV = [
@@ -19,13 +21,39 @@ const NAV = [
 ];
 
 export default function App() {
+  const { user } = useAuth();
+
+  // Show loading spinner while auth state resolves
+  if (user === undefined) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-slate-400 text-sm">Loading...</div>
+      </div>
+    );
+  }
+
+  // Not signed in — show login screen
+  if (!user) return <Login />;
+
+  return <AppShell user={user} />;
+}
+
+function AppShell({ user }) {
   const [page, setPage] = useState('dashboard');
   const [editEntry, setEditEntry] = useState(null);
   const {
-    fillups, redemptions, settings, setSettings,
+    fillups, redemptions, settings, loading, setSettings,
     addFillup, updateFillup, deleteFillup,
     addRedemption, deleteRedemption, importFillups,
-  } = useFillups();
+  } = useFillups(user.uid);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-slate-400 text-sm">Loading your data...</div>
+      </div>
+    );
+  }
 
   const handleAdd = (entry) => {
     if (editEntry) {
@@ -49,6 +77,8 @@ export default function App() {
 
   const showAdd = page === 'add';
 
+  const { logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Top bar */}
@@ -61,11 +91,19 @@ export default function App() {
               <span className="text-slate-400 text-xs block leading-none">{settings.carName}</span>
             </div>
           </div>
-          <button
-            onClick={() => { setEditEntry(null); setPage('add'); }}
-            className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm">
-            + Add
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setEditEntry(null); setPage('add'); }}
+              className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm">
+              + Add
+            </button>
+            <button
+              onClick={logout}
+              title="Sign out"
+              className="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors text-lg">
+              ↩
+            </button>
+          </div>
         </div>
       </header>
 
