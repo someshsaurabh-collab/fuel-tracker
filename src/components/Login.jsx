@@ -24,9 +24,8 @@ export default function Login() {
           ⛽
         </div>
         <h1 className="text-2xl font-bold text-slate-800 mb-1">Fuel Tracker</h1>
-        <p className="text-slate-400 text-sm mb-2">Mahindra XUV 3XO AX5</p>
-        <p className="text-slate-500 text-sm mb-8">
-          Track your fuel expenses, mileage and BPCL rewards — synced across all your devices.
+        <p className="text-slate-500 text-sm mb-8 mt-2">
+          Track your fuel expenses, mileage and rewards — synced across all your devices.
         </p>
 
         <button
