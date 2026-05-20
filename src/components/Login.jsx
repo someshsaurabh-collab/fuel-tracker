@@ -20,38 +20,47 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left / Top — branding panel */}
-      <div className="bg-orange-500 flex flex-col justify-center items-center px-8 py-12 md:w-1/2 md:min-h-screen">
-        <div className="bg-white/20 w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-6">
-          ⛽
-        </div>
-        <h1 className="text-3xl font-bold text-white mb-2">Fuel Tracker</h1>
-        <p className="text-orange-100 text-sm mb-10">Your personal fuel log</p>
-
-        <div className="space-y-4 w-full max-w-xs">
-          {[
-            ['📍', 'Know exactly what you spend on fuel every month'],
-            ['📈', 'Watch your mileage trend over time'],
-            ['🎯', 'Never lose track of your reward points'],
-            ['📱', 'Works on your phone and laptop both'],
-          ].map(([icon, text]) => (
-            <div key={text} className="flex items-start gap-3">
-              <span className="text-lg mt-0.5">{icon}</span>
-              <p className="text-white text-sm leading-snug">{text}</p>
+      <div className="bg-slate-900 flex flex-col justify-center items-center px-10 py-14 md:w-1/2 md:min-h-screen">
+        <div className="w-full max-w-sm">
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-10">
+            <div className="bg-orange-500 w-11 h-11 rounded-xl flex items-center justify-center text-xl">⛽</div>
+            <div>
+              <p className="text-white font-bold text-lg leading-none">Fuel Tracker</p>
+              <p className="text-slate-400 text-xs mt-0.5">Your personal fuel log</p>
             </div>
-          ))}
+          </div>
+
+          {/* USPs */}
+          <div className="space-y-6">
+            {[
+              ['💸', 'Monthly spend visibility', 'Know exactly what fuel is costing you each month'],
+              ['📈', 'Mileage trends', 'Track how your car is performing over time'],
+              ['🎯', 'Reward points', 'Never miss out on points you have earned'],
+              ['🔄', 'All your devices', 'Log on phone, review on laptop. Always in sync'],
+            ].map(([icon, title, desc]) => (
+              <div key={title} className="flex items-start gap-4">
+                <div className="bg-slate-800 w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0">{icon}</div>
+                <div>
+                  <p className="text-white text-sm font-semibold">{title}</p>
+                  <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Right / Bottom — sign in panel */}
-      <div className="flex flex-col justify-center items-center px-8 py-12 bg-white md:w-1/2 md:min-h-screen">
-        <div className="w-full max-w-xs">
+      <div className="flex flex-col justify-center items-center px-10 py-14 bg-white md:w-1/2 md:min-h-screen">
+        <div className="w-full max-w-sm text-center">
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Welcome back</h2>
-          <p className="text-slate-400 text-sm mb-8">Sign in to access your fuel logs</p>
+          <p className="text-slate-400 text-sm mb-10">Sign in to access your fuel logs</p>
 
           <button
             onClick={handleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 border-2 border-slate-200 hover:border-orange-300 rounded-xl py-3.5 px-4 font-semibold text-slate-700 transition-all disabled:opacity-50 shadow-sm">
+            className="w-full flex items-center justify-center gap-3 border-2 border-slate-200 hover:border-orange-400 hover:bg-orange-50 rounded-xl py-3.5 px-4 font-semibold text-slate-700 transition-all disabled:opacity-50">
             {loading ? (
               <span className="text-sm text-slate-500">Signing in...</span>
             ) : (
@@ -63,10 +72,10 @@ export default function Login() {
           </button>
 
           {error && (
-            <p className="text-red-500 text-xs mt-3 text-center">{error}</p>
+            <p className="text-red-500 text-xs mt-3">{error}</p>
           )}
 
-          <p className="text-xs text-slate-300 mt-8 text-center">Your data is private and only visible to you</p>
+          <p className="text-xs text-slate-300 mt-10">Your data is private and only visible to you</p>
         </div>
       </div>
     </div>
