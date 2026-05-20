@@ -24,9 +24,21 @@ export default function Login() {
           ⛽
         </div>
         <h1 className="text-2xl font-bold text-slate-800 mb-1">Fuel Tracker</h1>
-        <p className="text-slate-500 text-sm mb-8 mt-2">
-          Track your fuel expenses, mileage and rewards — synced across all your devices.
-        </p>
+        <p className="text-slate-400 text-sm mb-6 mt-1">Your personal fuel log</p>
+        <div className="text-left space-y-2 mb-8 w-full">
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <span className="text-base">📍</span> Know exactly what you spend on fuel every month
+          </div>
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <span className="text-base">📈</span> Watch your mileage trend over time
+          </div>
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <span className="text-base">🎯</span> Never lose track of your reward points
+          </div>
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <span className="text-base">📱</span> Works on your phone and laptop both
+          </div>
+        </div>
 
         <button
           onClick={handleSignIn}
