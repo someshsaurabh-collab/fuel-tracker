@@ -107,7 +107,7 @@ function AppShell({ user }) {
               <button
                 onClick={logout}
                 title="Sign out"
-                className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors hidden sm:block">
+                className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors">
                 Sign out
               </button>
             </div>
