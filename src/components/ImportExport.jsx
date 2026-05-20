@@ -57,12 +57,7 @@ export default function ImportExport({ fillups, settings, onImport }) {
               tankType: (obj.tanktype || obj.tank || 'full').toLowerCase().includes('full') ? 'full' : 'partial',
               station: obj.station || 'BPCL',
               paymentMethod: obj.paymentmethod || obj.payment || 'SBI BPCL Card',
-              pointsEarned: calcPoints(
-                parseFloat(obj.totalamount || obj.total),
-                obj.station || 'BPCL',
-                obj.paymentmethod || obj.payment || 'SBI BPCL Card',
-                settings.pointsPerHundred
-              ),
+              pointsEarned: 0,
             };
           });
         }
