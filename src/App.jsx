@@ -97,12 +97,20 @@ function AppShell({ user }) {
               className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm">
               + Add
             </button>
-            <button
-              onClick={logout}
-              title="Sign out"
-              className="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors text-lg">
-              ↩
-            </button>
+            <div className="flex items-center gap-2 pl-1 border-l border-slate-100 ml-1">
+              {user.photoURL
+                ? <img src={user.photoURL} alt={user.displayName} className="w-8 h-8 rounded-full border-2 border-slate-100" />
+                : <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 font-bold text-sm flex items-center justify-center">
+                    {user.displayName?.[0] || 'U'}
+                  </div>
+              }
+              <button
+                onClick={logout}
+                title="Sign out"
+                className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors hidden sm:block">
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       </header>
