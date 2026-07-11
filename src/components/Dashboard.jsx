@@ -46,7 +46,10 @@ export default function Dashboard({ fillups, redemptions, settings, onNavigate }
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-slate-800">Good day! ⛽</h2>
-            <p className="text-slate-500 text-sm mt-1">{settings.carName}</p>
+            {settings.carName
+              ? <p className="text-slate-500 text-sm mt-1">{settings.carName}</p>
+              : <button onClick={() => onNavigate('settings')} className="text-orange-500 text-sm mt-1 hover:underline">+ Add vehicle model</button>
+            }
           </div>
           <button
             onClick={() => onNavigate('add')}

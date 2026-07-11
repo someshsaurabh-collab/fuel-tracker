@@ -8,7 +8,7 @@ const DEFAULT_SETTINGS = {
   startingPoints: 0,
   pointsPerHundred: 13,
   valuePerPoint: 0.25,
-  carName: 'Mahindra XUV 3XO AX5',
+  carName: '',
 };
 
 export function useFillups(uid) {

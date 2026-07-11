@@ -31,6 +31,7 @@ export default function Settings({ settings, onSave }) {
           <div>
             <label className="block text-sm font-medium text-slate-600 mb-1.5">Car Name / Model</label>
             <input value={form.carName} onChange={e => set('carName', e.target.value)}
+              placeholder="e.g. Mahindra XUV 3XO AX5"
               className="w-full px-3 py-2.5 border-2 border-slate-200 focus:border-orange-400 rounded-xl text-sm outline-none" />
           </div>
         </div>

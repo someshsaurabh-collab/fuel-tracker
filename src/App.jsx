@@ -88,7 +88,10 @@ function AppShell({ user }) {
             <div className="bg-orange-500 rounded-xl w-8 h-8 flex items-center justify-center text-white text-sm font-bold">⛽</div>
             <div>
               <span className="font-bold text-slate-800 text-sm">Fuel Tracker</span>
-              <span className="text-slate-400 text-xs block leading-none">{settings.carName}</span>
+              {settings.carName
+                ? <span className="text-slate-400 text-xs block leading-none">{settings.carName}</span>
+                : <button onClick={() => setPage('settings')} className="text-orange-500 text-xs block leading-none hover:underline">+ Add vehicle model</button>
+              }
             </div>
           </div>
           <div className="flex items-center gap-2">
